@@ -6,21 +6,39 @@ class Main{
     static MineCell[][] Map;
     static Random rand = new Random(69420);
     static boolean FirstMove = false;
+    static Scanner Userinput = new Scanner(System.in);
 
     public static void main(String[] args){
-
-        Setup();
-
         while (true) {
+            Setup();
+            
+            while (!HasWon()) {
+                PrintMap();
+                ChooseCell();
+            }
+
             PrintMap();
-            ChooseCell();
-            CheckWin();
+
+            PlayAgain();
         }
-        
+       
+    }
+
+    public static void PlayAgain() {
+        System.out.println("Would you like to play again?");
+
+        String Answer = Userinput.next();
+
+        if (Answer.toLowerCase().contains("no")) {
+            System.out.println("See you next time");
+            System.exit(0);
+        }else{
+            System.out.println("Playing again");
+        }
     }
 
     public static void ChooseCell() {
-    Scanner Userinput = new Scanner(System.in);
+    
     char XCord;
     char YCord;
 
@@ -29,7 +47,7 @@ class Main{
         XCord = (char) (Userinput.next().toCharArray()[0] - 33);
 
         if (XCord < 0 || XCord >= Map.length) {
-            System.out.println("X Cord IS Out of bounds");
+            System.out.println("X Cord IS Out of bounds plese try again");
             continue;
         }
 
@@ -37,7 +55,7 @@ class Main{
         YCord = (char) (Userinput.next().toCharArray()[0] - 33);
 
         if (YCord < 0 || YCord >= Map.length) {
-            System.out.println("Y Cord IS Out of bounds");
+            System.out.println("Y Cord IS Out of bounds please try again");
             continue;
         }
 
@@ -91,10 +109,10 @@ class Main{
 
         int Size = 0;
         
-        Scanner Userinput = new Scanner(System.in);
+        
 
         while (true) {
-            System.out.print("Please enter your number of cols here: ");
+            System.out.print("Please enter the map size here (Min of 1 max of 93): ");
 
             try {
                 Size = Integer.parseInt(Userinput.next());
@@ -102,14 +120,14 @@ class Main{
                 //end of chars that are visable
                 if(Size > 93){
                     System.out.println("To Big Please try again");
-                }else if(Size < 0){
+                }else if(Size < 1){
                     System.out.println("To Small Please try again");
                 }else{
                     break;
                 }
 
             } catch (Exception e) {
-                System.out.println("NaN");
+                System.out.println("Errror unable to determen the number");
             }
         }
 
@@ -117,6 +135,9 @@ class Main{
 
         for (int Row = 0; Row < Map.length; Row++) {
             for (int Col = 0; Col < Map[Row].length; Col++) {
+
+
+
                 Map[Row][Col] = new MineCell(rand.nextBoolean());
             }
         }
@@ -251,18 +272,18 @@ class Main{
         return Nebours;
     }
 
-    public static void CheckWin() {
+    public static boolean HasWon() {
         for (int Row = 0; Row < Map.length; Row++) {
             for (int Col = 0; Col < Map[Row].length; Col++) {
                 if (!Map[Row][Col].IsFound && !Map[Row][Col].IsActive) {
-                    return;
+                    return false;
                 }
             }
         }
 
         System.out.println();
         System.out.println("You Win :D");
-        System.exit(0);
+        return true;
     }
 
 }
