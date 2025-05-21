@@ -3,11 +3,17 @@ import java.util.Scanner;
 
 class Main{
 
-    static MineCell[][] Map;
-    static Random rand = new Random(69420);
-    static boolean FirstMove = false;
-    static Scanner Userinput = new Scanner(System.in);
 
+    //Mine cell map contains all cells
+    static MineCell[][] Map;
+    //random
+    static Random rand = new Random(69420);
+    static boolean FirstMove = true;
+    static Scanner Userinput = new Scanner(System.in);
+    static int Difcaulty = 0;
+
+
+    //entry fo the program
     public static void main(String[] args){
         while (true) {
             Setup();
@@ -131,14 +137,40 @@ class Main{
             }
         }
 
+        while (true) {
+            System.out.print("Please enter the difculty (Min of 0 (no mines) max of 5 (50/50)): ");
+
+            try {
+                Difcaulty = Integer.parseInt(Userinput.next());
+
+                //end of chars that are visable
+                if(Difcaulty > 5){
+                    System.out.println("To Big Please try again");
+                }else if(Size < 0){
+                    System.out.println("To Small Please try again");
+                }else{
+                    break;
+                }
+
+            } catch (Exception e) {
+                System.out.println("Errror unable to determen the number");
+            }
+        }
+
+
+
+
         Map = new MineCell[Size][Size];
 
         for (int Row = 0; Row < Map.length; Row++) {
             for (int Col = 0; Col < Map[Row].length; Col++) {
 
+                if(rand.nextInt(5) < Difcaulty){
+                    Map[Row][Col] = new MineCell(true);
+                }else{
+                    Map[Row][Col] = new MineCell(false);
+                }
 
-
-                Map[Row][Col] = new MineCell(rand.nextBoolean());
             }
         }
     }
@@ -193,7 +225,7 @@ class Main{
                 if (Map[Row][Col].IsFound) {
                     System.out.print("|" + GetNeibours(Row, Col));
                 }else{
-                    System.out.print("|D");
+                    System.out.print("| ");
                 }
             }
             //Starts a new Line and finishes the sides
